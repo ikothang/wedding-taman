@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
@@ -987,10 +987,28 @@
         // Nama koleksi rata di Firestore untuk menyimpan ucapan secara bebas
         const COLLECTION_NAME = "wishes"; 
 
-        // Inisialisasi Firebase App
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        let app, db, auth;
+        let isFirebaseInitialized = false;
+
+        // Semak sama ada pengguna telah memasukkan config Firebase yang sah (Bukan placeholder)
+        const isConfigValid = firebaseConfig && 
+                             firebaseConfig.apiKey && 
+                             !firebaseConfig.apiKey.startsWith("SILA_MASUKKAN_");
+
+        if (isConfigValid) {
+            try {
+                // Inisialisasi Firebase App secara selamat agar tidak mengecohkan seluruh halaman jika ralat berlaku
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                isFirebaseInitialized = true;
+                console.log("Firebase berjaya diinisialisasi.");
+            } catch (e) {
+                console.error("Gagal menginisialisasi Firebase:", e);
+            }
+        } else {
+            console.warn("⚠️ Firebase tidak diinisialisasi kerana kredensial masih menggunakan nilai dummy.");
+        }
 
         // Dynamic State List
         let wishesList = [];
@@ -999,14 +1017,9 @@
 
         // Pastikan pengguna log masuk secara senyap (tanpa nama) untuk kebenaran Firestore
         async function ensureAuth() {
+            if (!isFirebaseInitialized) return null;
             if (auth.currentUser) return auth.currentUser;
             
-            // Berikan amaran jika kod dijalankan menggunakan kredensial dummy asal
-            if (firebaseConfig.apiKey.startsWith("SILA_MASUKKAN_")) {
-                console.warn("⚠️ Amaran: Sila kemas kini pemboleh ubah 'firebaseConfig' di dalam kod dengan maklumat Firebase sebenar anda untuk membolehkan pangkalan data berfungsi di GitHub Pages.");
-                return null;
-            }
-
             try {
                 console.log("Mencuba log masuk tanpa nama (Anonymous Sign-In)...");
                 const anonymousCredential = await signInAnonymously(auth);
@@ -1019,8 +1032,8 @@
 
         // Real-time listener untuk memantau koleksi ucapan (Mengisih di memori JS)
         function listenToWishes(user) {
-            if (!user) {
-                console.warn("Mendengar pangkalan data dibatalkan kerana status log masuk tidak dikesan.");
+            if (!isFirebaseInitialized || !user) {
+                console.warn("Mendengar pangkalan data dibatalkan kerana pangkalan data tidak sedia.");
                 return;
             }
             
@@ -1057,6 +1070,18 @@
 
         // Jalankan aliran penyediaan aplikasi secara selamat pada pemuatan halaman
         async function startApp() {
+            if (!isFirebaseInitialized) {
+                console.warn("Aplikasi berjalan dalam Mod Luar Talian (Offline Mode). Sila gantikan kredensial Firebase untuk berfungsi sepenuhnya.");
+                // Sediakan satu buih contoh supaya halaman tidak kelihatan kosong semasa ujian tempatan
+                wishesList = [
+                    { id: 'offline-sample', nama: 'Amir & Puteri', ucapan: 'Selamat Datang! Sila konfigurasikan firebaseConfig di dalam fail HTML anda dengan maklumat pangkalan data Firebase sebenar untuk membolehkan tetamu menghantar ucapan secara langsung!', timestamp: Date.now() }
+                ];
+                if (isGateOpened) {
+                    renderAllBubbles();
+                }
+                return;
+            }
+
             try {
                 const user = await ensureAuth();
                 if (user) {
@@ -1239,27 +1264,41 @@
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menghantar...';
 
-            // Memastikan peranti telah log masuk (Auth) sebelum melancarkan penulisan (Rule 3)
-            const user = await ensureAuth();
             let saveSuccess = false;
-            
-            if (user) {
-                try {
-                    // Menyimpan data ucapan ke laluan koleksi rata standard
-                    const wishesColRef = collection(db, COLLECTION_NAME);
-                    await addDoc(wishesColRef, {
-                        nama: nama,
-                        kehadiran: keha,
-                        ucapan: ucapan,
-                        timestamp: Date.now()
-                    });
-                    console.log("Ucapan berjaya disimpan dalam pangkalan data!");
-                    saveSuccess = true;
-                } catch (error) {
-                    console.error("Gagal menulis ke Firestore:", error);
+
+            if (isFirebaseInitialized) {
+                // Memastikan peranti telah log masuk (Auth) sebelum melancarkan penulisan (Rule 3)
+                const user = await ensureAuth();
+                if (user) {
+                    try {
+                        // Menyimpan data ucapan ke laluan koleksi rata standard
+                        const wishesColRef = collection(db, COLLECTION_NAME);
+                        await addDoc(wishesColRef, {
+                            nama: nama,
+                            kehadiran: keha,
+                            ucapan: ucapan,
+                            timestamp: Date.now()
+                        });
+                        console.log("Ucapan berjaya disimpan dalam pangkalan data!");
+                        saveSuccess = true;
+                    } catch (error) {
+                        console.error("Gagal menulis ke Firestore:", error);
+                    }
+                } else {
+                    console.error("Gagal menghantar ucapan: Tiada sesi log masuk aktif.");
                 }
             } else {
-                console.error("Gagal menghantar ucapan: Tiada sesi log masuk aktif.");
+                // Mod Simulasi Tempatan (Offline/Local Fallback)
+                console.log("Menyimpan ke dalam simulasi tempatan...");
+                const localWish = {
+                    id: 'local-' + Date.now(),
+                    nama: nama,
+                    ucapan: ucapan,
+                    timestamp: Date.now()
+                };
+                wishesList.unshift(localWish);
+                renderAllBubbles();
+                saveSuccess = true;
             }
 
             // Kembalikan butang ke keadaan asal
@@ -1269,7 +1308,7 @@
             // Sediakan maklum balas interaktif
             if (saveSuccess) {
                 if (keha === "ya") {
-                    modalMessage.innerHTML = `Terima kasih Tuan/Puan <b>${nama}</b>! Pengesahan kehadiran anda telah selamat didaftarkan. Kami menanti kehadiran anda di dewan dewan pengantin nanti.`;
+                    modalMessage.innerHTML = `Terima kasih Tuan/Puan <b>${nama}</b>! Pengesahan kehadiran anda telah selamat didaftarkan. Kami menanti kehadiran anda di dewan pengantin nanti.`;
                 } else {
                     modalMessage.innerHTML = `Terima kasih Tuan/Puan <b>${nama}</b>. Pihak kami sangat menghargai titipan maklum balas serta ucapan doa ikhlas anda yang telah selamat disimpan.`;
                 }
