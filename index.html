@@ -1,45 +1,46 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Walimatul Urus | Amir & Puteri</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preload background images to render instantly -->
-    <link rel="preload" as="image" href="https://arleta.site/interactivelink/4826/IMG_2314.PNG">
-    <link rel="preload" as="image" href="https://arleta.site/interactivelink/4826/IMG_2313.PNG">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --dusty-pink: #DCAEAE;
-            --dusty-pink-dark: #B58282;
-            --ivory: #FFFDF9;
-            --sage-green: #8FA88B;
-            --sage-dark: #6D8569;
-            --gold: #C5A059;
-            --gold-light: #E5C483;
-            --text-main: #2C3E2B; /* Deep Forest/Charcoal Green */
-            --text-light: #60725F;
-            --font-script: 'Great Vibes', cursive;
-            --font-serif: 'Playfair Display', serif;
-            --font-sans: 'Montserrat', sans-serif;
+.btn-close-modal:hover {
+            background: var(--gold);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* --- Audio Button --- */
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: white;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10010; /* Sentiasa terapung di atas semua lapisan kecuali modal aktif */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            animation: spin 6s linear infinite;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* --- STREAMING_CHUNK: Styling layout and butterfly effects... --- */
-        .butterfly-container {
+        .audio-btn i {
+            font-size: 1.15rem;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-btn.paused {
+            animation: none;
+            background: var(--gold);
+            color: white;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- Falling Petals Animation --- */
+        .petal {
             position: fixed;
             pointer-events: none;
             z-index: 8;
