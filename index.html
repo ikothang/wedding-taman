@@ -1,46 +1,45 @@
-.btn-close-modal:hover {
-            background: var(--gold);
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walimatul Urus | Amir & Puteri</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Preload background images to render instantly -->
+    <link rel="preload" as="image" href="https://arleta.site/interactivelink/4826/IMG_2314.PNG">
+    <link rel="preload" as="image" href="https://arleta.site/interactivelink/4826/IMG_2313.PNG">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --dusty-pink: #DCAEAE;
+            --dusty-pink-dark: #B58282;
+            --ivory: #FFFDF9;
+            --sage-green: #8FA88B;
+            --sage-dark: #6D8569;
+            --gold: #C5A059;
+            --gold-light: #E5C483;
+            --text-main: #2C3E2B; /* Deep Forest/Charcoal Green */
+            --text-light: #60725F;
+            --font-script: 'Great Vibes', cursive;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Montserrat', sans-serif;
         }
 
-        /* --- Audio Button --- */
-        .audio-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 55px;
-            height: 55px;
-            background: white;
-            color: var(--gold);
-            border: 2px solid var(--gold);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 10010; /* Sentiasa terapung di atas semua lapisan kecuali modal aktif */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            animation: spin 6s linear infinite;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .audio-btn i {
-            font-size: 1.15rem;
-        }
-
-        .audio-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .audio-btn.paused {
-            animation: none;
-            background: var(--gold);
-            color: white;
-        }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* --- Falling Petals Animation --- */
-        .petal {
+        /* */
+        .butterfly-container {
             position: fixed;
             pointer-events: none;
             z-index: 8;
@@ -127,6 +126,7 @@
         .floral-border::before { top: -12px; left: 50%; transform: translateX(-50%); }
         .floral-border::after { bottom: -15px; left: 50%; transform: translateX(-50%); }
 
+        /* */
         /* --- Cover Screen (Gerbang Taman Rahsia) --- */
         #cover-screen {
             position: fixed;
@@ -268,6 +268,7 @@
             opacity: 1;
         }
 
+        /* */
         /* --- Hero Section (Satu skrin kekal) --- */
         .hero {
             position: relative;
@@ -384,6 +385,7 @@
             color: var(--sage-dark);
         }
 
+        /* */
         /* --- Wish Bubbles System --- */
         #bubble-container {
             position: absolute;
@@ -460,6 +462,7 @@
             animation: popOut 0.4s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045) !important;
         }
 
+        /* */
         /* --- Wish Display Overlay/Card --- */
         #wish-view-modal {
             position: fixed;
@@ -697,6 +700,7 @@
             transform: translateY(-2px);
         }
 
+        /* */
         /* --- RSVP Form Inside Pop-up --- */
         .rsvp-form {
             text-align: left;
@@ -751,6 +755,136 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(181, 130, 130, 0.45);
         }
+
+        /* */
+        /* --- Custom Success Modal --- */
+        #custom-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 62, 43, 0.4);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        #custom-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--ivory);
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--gold);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        #custom-modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content i {
+            font-size: 3rem;
+            color: var(--sage-green);
+            margin-bottom: 15px;
+        }
+
+        .btn-close-modal {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: var(--text-main);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-close-modal:hover {
+            background: var(--gold);
+        }
+
+        /* --- Audio Button --- */
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: white;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10010; /* Sentiasa terapung di atas semua lapisan kecuali modal aktif */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            animation: spin 6s linear infinite;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .audio-btn i {
+            font-size: 1.15rem;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-btn.paused {
+            animation: none;
+            background: var(--gold);
+            color: white;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- Falling Petals Animation --- */
+        .petal {
+            position: fixed;
+            top: -10%;
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); }
+            50% { transform: translateY(50vh) rotate(180deg) translateX(30px); }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); }
+        }
+
+        /* --- Responsive Modifications --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .cover-text-card h1 { font-size: 2.8rem; }
+            .cover-text-card { padding: 25px 20px; margin-bottom: 30px; }
+            .floating-nav { bottom: 20px; gap: 8px; }
+            .float-btn { padding: 8px 12px; font-size: 0.7rem; }
+            .info-overlay { padding: 25px 15px; }
+            .arch-container { height: 55vh; }
+            
+            .countdown-label { font-size: 0.85rem; }
+            .hero-countdown { gap: 10px; }
+            .hero-countdown .time-box { min-width: 65px; padding: 8px 10px; }
+            .hero-countdown .time-box span { font-size: 1.4rem; }
+        }
     </style>
 </head>
 <body class="locked">
@@ -779,10 +913,8 @@
         </button>
     </div>
 
-    <!-- Audio Element -->
-    <audio id="bg-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/01/21/audio_31743c58bd.mp3?filename=piano-moment-9835.mp3" type="audio/mpeg">
-    </audio>
+    <!-- YouTube Hidden Player Container -->
+    <div id="youtube-player" style="position: fixed; width: 0; height: 0; opacity: 0; pointer-events: none; left: -9999px;"></div>
 
     <!-- Floating Audio Control -->
     <div class="audio-btn paused" id="audio-toggle" onclick="toggleAudio()">
@@ -961,7 +1093,7 @@
     <!-- Firebase Imports and Setup -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
@@ -984,6 +1116,38 @@
         // =========================================================================
         const GEMINI_API_KEY = "SILA_MASUKKAN_GEMINI_API_KEY_ANDA_DI_SINI";
         // =========================================================================
+
+        /* */
+        // Memuatkan YouTube Player API untuk muzik latar belakang secara dinamik
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let ytPlayer = null;
+        let isPlayerReady = false;
+
+        // Callback standard global YouTube API apabila skrip berjaya dimuatkan
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('youtube-player', {
+                videoId: '70JUuXY3pgY',
+                playerVars: {
+                    autoplay: 0,
+                    loop: 1,
+                    playlist: '70JUuXY3pgY', // Diperlukan untuk menggelung (loop) satu video sahaja
+                    controls: 0,
+                    showinfo: 0,
+                    rel: 0,
+                    modestbranding: 1
+                },
+                events: {
+                    onReady: () => {
+                        isPlayerReady = true;
+                        console.log("Muzik YouTube latar belakang sedia dimainkan.");
+                    }
+                }
+            });
+        };
 
         // Nama koleksi rata di Firestore untuk menyimpan ucapan secara bebas
         const COLLECTION_NAME = "wishes"; 
@@ -1024,6 +1188,7 @@
         let isGateOpened = false;
         let unsubscribeWishes = null;
 
+        /* */
         // Pastikan pengguna log masuk secara senyap (tanpa nama) untuk kebenaran Firestore
         async function ensureAuth() {
             if (!isFirebaseInitialized) return null;
@@ -1116,8 +1281,8 @@
         // Mulakan aliran aplikasi
         startApp();
 
+        /* */
         // --- 1. Fungsi Buka Jemputan Interaktif & Video Transition ---
-        const audio = document.getElementById("bg-music");
         const audioBtn = document.getElementById("audio-toggle");
         let isPlaying = false;
 
@@ -1166,7 +1331,7 @@
                 
                 document.body.classList.remove('locked');
 
-                // Mainkan muzik latar romantis secara automatik
+                // Mainkan muzik latar romantis YouTube secara automatik
                 playAudio();
 
                 // Jalankan animasi kelopak taman jatuh & rama-rama
@@ -1185,22 +1350,33 @@
         }
 
         function playAudio() {
-            audio.play().then(() => {
+            if (ytPlayer && isPlayerReady) {
+                ytPlayer.playVideo();
                 isPlaying = true;
                 audioBtn.classList.remove('paused');
                 audioBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
-            }).catch(err => {
-                console.log("Autoplay audio disekat oleh sekuriti pelayar.", err);
-            });
+            } else {
+                // Fallback sekiranya API YouTube masih belum bersedia sepenuhnya
+                const checkReady = setInterval(() => {
+                    if (ytPlayer && isPlayerReady) {
+                        ytPlayer.playVideo();
+                        isPlaying = true;
+                        audioBtn.classList.remove('paused');
+                        audioBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+                        clearInterval(checkReady);
+                    }
+                }, 200);
+            }
         }
 
         function toggleAudio() {
+            if (!ytPlayer || !isPlayerReady) return;
             if (isPlaying) {
-                audio.pause();
+                ytPlayer.pauseVideo();
                 audioBtn.classList.add('paused');
                 audioBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
             } else {
-                audio.play();
+                ytPlayer.playVideo();
                 audioBtn.classList.remove('paused');
                 audioBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
             }
@@ -1257,6 +1433,7 @@
             }
         }
 
+        /* */
         // submitRSVP menyimpan maklumat rsvp terus ke Firestore dengan selamat
         async function submitRSVP(e) {
             e.preventDefault();
@@ -1335,6 +1512,7 @@
             }
         }
 
+        /* */
         // --- 4.5. Gemini AI Custom Wedding Wish Generator ---
         async function generateAIWish() {
             const tone = document.getElementById('ai-tone').value;
@@ -1449,6 +1627,7 @@
             document.getElementById("custom-modal").classList.remove("show");
         }
 
+        /* */
         // --- 5. Animasi Guguran Kelopak Bunga Taman Rahsia ---
         function startFallingFlowers() {
             const colors = ['#DCAEAE', '#EAC5C5', '#FFFDF9', '#C3D1C1', '#A5BC9F'];
@@ -1533,6 +1712,7 @@
             animation.onfinish = () => b.remove();
         }
 
+        /* */
         // Render all active wishes dynamically
         function renderAllBubbles() {
             const container = document.getElementById('bubble-container');
